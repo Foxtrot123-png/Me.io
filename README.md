@@ -81,5 +81,5 @@ Customized outreach at scale.
 
 ## 📧 Contact
 * **Email:** [ritikmohapatra94@gmail.com](mailto:ritikmohapatra94@gmail.com)
-* **Live App:** [ritik-ai.streamlit.app](https://ritik-ai.streamlit.app)
+* **Live App:** [ritik-ai.streamlit.app](https://ritik-ai-twin.streamlit.app/)
 * **LinkedIn:** [Ritik](https://www.linkedin.com/in/ritik-r-mohapatra/)
