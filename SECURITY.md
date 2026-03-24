@@ -1,0 +1,1 @@
+If you find a vulnerability in the ngrok-to-n8n tunnel or the authentication headers, please report it via email at ritikmohapatra94@gmail.com rather than opening a public issue.
