@@ -1,6 +1,6 @@
 # Me.io
 
-![System Demo](WhatsAppVideo2026-03-22at10.31.45-ezgif.com-speed.gif)
+![System Demo](Vid.gif)
 
 A chatbot and a few automations that stand in for me during the job hunt. It runs on a Raspberry Pi 5 in my flat, orchestrated with n8n, exposed through an ngrok tunnel.
 
