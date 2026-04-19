@@ -1,4 +1,4 @@
-# 🤖 Me.io — The Digital Surrogate
+# 🤖 Me.io  The Digital Surrogate
 
 > **"ATS ghosting is a data problem. I solved it with a production-grade Agentic ecosystem that doesn't just talk—it hunts, learns, and personalizes."**
 
@@ -9,7 +9,7 @@
 
 Unlike standard "wrappers," Me.io manages four distinct automated workstreams to handle the entire lifecycle of job hunting and professional engagement.
 
----
+--------------------------
 
 ## 🚀 The Four Core Engines
 
@@ -34,7 +34,7 @@ Customized outreach at scale.
 * **Logic:** Triggered by a job application form submission. Matches the specific recruiter for that role via Apollo.
 * **Action:** Uses an LLM chain to rewrite CV bullets for that specific JD and generates a **unique QR code** (via QuickChart) leading to a personalized landing page.
 
----
+--------------------------
 
 ## 🛠️ Engineering Stack & Optimization
 * **Orchestration:** n8n (Self-hosted Docker container)
@@ -42,14 +42,14 @@ Customized outreach at scale.
 * **Memory:** Pinecone (Vector RAG) + n8n Window Buffer (Conversation memory).
 * **Networking:** Secure **ngrok tunnel** providing an encrypted bridge to home hardware.
 
----
+--------------------------
 
 ## 🧠 Technical Wins
 * **High-Stakes Data:** Built to reflect my background managing **22M+ transaction records** at **Deloitte USI**.
 * **Metrics-Driven:** Capable of defending my MSc research on Multi-modal AI (BERT-ResNet fusion) and my achieved **0.82 F1 score**.
 * **Architecture Rigor:** Implemented `split-in-batches` logic and `wait` nodes to handle API quotas effectively on a self-hosted node.
 
----
+--------------------------
 
 ## 🏗️ Visualizing the Architecture
 
@@ -62,7 +62,7 @@ Customized outreach at scale.
 ### Real-Time Ingestion
 ![Ingestion Of Data](mermaid-diagram-2026-03-21-163128.png)
 
----
+--------------------------
 
 ## 🛠️ Deployment
 
