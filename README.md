@@ -1,85 +1,73 @@
-# 🤖 Me.io  The Digital Surrogate
-
+# Me.io
 
 ![System Demo](WhatsAppVideo2026-03-22at10.31.45-ezgif.com-speed.gif)
 
-## 📋 Project Overview
-**Me.io** is a self-hosted, multi-flow agentic ecosystem orchestrated via **n8n** and running on a **Raspberry Pi 5**. It transitions my professional presence from a static PDF to an active, 24/7 technical surrogate. 
+A chatbot and a few automations that stand in for me during the job hunt. It runs on a Raspberry Pi 5 in my flat, orchestrated with n8n, exposed through an ngrok tunnel.
 
-Unlike standard "wrappers," Me.io manages four distinct automated workstreams to handle the entire lifecycle of job hunting and professional engagement.
+I built it because sending CVs into ATS black holes wasn't working. The idea was to have something always on that could answer recruiter questions about my background, keep itself current as I do new work, and take some of the outreach off my plate.
 
---------------------------
+## What it does
 
-## 🚀 The Four Core Engines
+Four workflows, fairly independent of each other.
 
-### 1. The Agentic RAG Chatbot 
-The "front office." A reasoning agent that handles technical interviews and bio-queries.
-* **Logic:** Uses a dual-tool setup to query separate Pinecone namespaces.
-* **Governance:** A "Security First" logic gate checks **GDPR & Cybersecurity protocols** before disclosing PII or system prompts.
-* **Tech:** Gemini 1.5 Flash, Pinecone, n8n Agent Node.
+**Chatbot.** A RAG agent that answers questions about me — career, projects, the MSc, technical topics. Pinecone is split into two namespaces (bio and technical) and the agent picks the right one per query. Gemini 1.5 Flash for reasoning, n8n's agent node for tool use. There's a guardrail step in front that refuses to leak PII or the system prompt if someone tries to extract either.
 
-### 2. Recruiter Intelligence 
-A proactive lead-generation pipeline.
-* **Logic:** Searches the **Apollo.io** index for UK-based Technical Recruiters and Talent Managers at target companies. 
-* **Action:** Reveals verified emails, cleans the data, and synchronizes leads to a Google Sheets CRM with built-in rate-limiting safety delays.
+**Recruiter lookup.** Queries Apollo.io for UK-based technical recruiters and talent managers at companies I'm interested in, pulls verified emails, cleans the output, and appends to a Google Sheet. Apollo's rate limits are tight, so this runs through split-in-batches with wait nodes between chunks.
 
-### 3. Real-Time Data Ingestion
-Ensures the surrogate is never outdated.
-* **Logic:** Watches a specific **Google Drive** folder for new research papers, certifications, or project summaries.
-* **Action:** Automatically downloads, extracts text from PDFs, generates embeddings, and updates the Pinecone vector index.
+**Doc ingestion.** Watches a Google Drive folder. When I drop a new PDF in — a paper, a cert, a project write-up — it extracts the text, embeds it, and upserts into Pinecone. Means I don't have to manually reindex when my material changes.
 
-### 4. Application Personalizer
-Customized outreach at scale.
-* **Logic:** Triggered by a job application form submission. Matches the specific recruiter for that role via Apollo.
-* **Action:** Uses an LLM chain to rewrite CV bullets for that specific JD and generates a **unique QR code** (via QuickChart) leading to a personalized landing page.
+**Per-application outreach.** Triggered by a form submission when I apply somewhere. Looks up the likely recruiter for that role via Apollo, runs the JD through an LLM chain that rewrites my CV bullets to match, and generates a QR code via QuickChart pointing to a landing page built for that specific application.
 
---------------------------
+## Running it on a Pi
 
-## 🛠️ Engineering Stack & Optimization
-* **Orchestration:** n8n 
-* **Compute:** Raspberry Pi 5 (8GB) optimized with **ZRAM** and hard Docker resource limits (`--memory="1.5g"`).
-* **Memory:** Pinecone (Vector RAG) + n8n Window Buffer (Conversation memory).
-* **Networking:** Secure **ngrok tunnel** providing an encrypted bridge to home hardware.
+The Pi 5 with 8GB handles this, but it took some tuning. Early versions had n8n OOMing under any real load. Capping the Docker container at 1.5GB memory and 1.5 CPUs, plus enabling ZRAM on the host, fixed it — n8n is comfortable within those limits and leaves headroom for everything else running on the box.
 
---------------------------
+Outbound is an ngrok tunnel. Encrypted, no router config, easy to rotate.
 
-## 🧠 Technical Wins
-* **High-Stakes Data:** Built to reflect my background managing **22M+ transaction records** at **Deloitte USI**.
-* **Metrics-Driven:** Capable of defending my MSc research on Multi-modal AI (BERT-ResNet fusion) and my achieved **0.82 F1 score**.
-* **Architecture Rigor:** Implemented `split-in-batches` logic and `wait` nodes to handle API quotas effectively on a self-hosted node.
+Memory-wise: Pinecone handles the long-term vector store, n8n's window buffer handles short-term conversation context in the chatbot.
 
---------------------------
+## Background this leans on
 
-## 🏗️ Visualizing the Architecture
+Two things from my actual work history that the project reflects:
 
-### System Logic & RAG Flow
+- At Deloitte USI I worked with transaction datasets in the 22M+ row range, which is where the batching / rate-limit / don't-load-everything-into-memory instincts come from rather than from tutorials.
+- My MSc was on multi-modal AI — BERT and ResNet fused for a classification task, final F1 of 0.82. The thesis and supporting notes are in the Pinecone index, so the chatbot can go into real depth on it.
+
+## Architecture diagrams
+
+Main chatbot and RAG flow:
+
 ![AI Twin Workflow](mermaid-diagram-2026-03-21-163009.png)
 
-### Recruiter Hunter & Lead Gen
+Recruiter lookup:
+
 ![Lead Generation](mermaid-diagram-2026-03-21-163116.png)
 
-### Real-Time Ingestion
+Doc ingestion:
+
 ![Ingestion Of Data](mermaid-diagram-2026-03-21-163128.png)
 
---------------------------
+## Deploy
 
-## 🛠️ Deployment
+```bash
+git clone https://github.com/Foxtrot123-png/Me.io
+cd Me.io
+```
 
-1.  **Clone & Configure:**
-    ```bash
-    git clone [https://github.com/Foxtrot123-png/Me.io](https://github.com/Foxtrot123-png/Me.io)
-    
-    cd Me.io
-    ```
-2.  **Import Workflows:** Import the `n8n_workflow_template.json` into n8n to instantly deploy all 4 flows.
-3.  **Docker Up:**
-    ```bash
-    docker run -d --name n8n --memory="1.5g" --cpus="1.5" --restart always -p 5678:5678 n8nio/n8n
-    ```
+Import `n8n_workflow_template.json` into your n8n instance — that brings in all four workflows.
 
----
+```bash
+docker run -d --name n8n \
+  --memory="1.5g" --cpus="1.5" \
+  --restart always \
+  -p 5678:5678 \
+  n8nio/n8n
+```
 
-## 📧 Contact
-* **Email:** [ritikmohapatra94@gmail.com](mailto:ritikmohapatra94@gmail.com)
-* **Live App:** [ritik-ai.streamlit.app](https://ritik-ai-twin.streamlit.app/)
-* **LinkedIn:** [Ritik](https://www.linkedin.com/in/ritik-r-mohapatra/)
+You'll need credentials for Pinecone, Gemini, Apollo, Google Drive, and Google Sheets set up in n8n before the flows will run.
+
+## Contact
+
+- Email: [ritikmohapatra94@gmail.com](mailto:ritikmohapatra94@gmail.com)
+- Live chatbot: [ritik-ai-twin.streamlit.app](https://ritik-ai-twin.streamlit.app/)
+- LinkedIn: [Ritik R Mohapatra](https://www.linkedin.com/in/ritik-r-mohapatra/)
