@@ -12,23 +12,23 @@ Unlike standard "wrappers," Me.io manages four distinct automated workstreams to
 
 ## 🚀 The Four Core Engines
 
-### 1. The Agentic RAG Chatbot (The Surrogate)
+### 1. The Agentic RAG Chatbot 
 The "front office." A reasoning agent that handles technical interviews and bio-queries.
 * **Logic:** Uses a dual-tool setup to query separate Pinecone namespaces.
 * **Governance:** A "Security First" logic gate checks **GDPR & Cybersecurity protocols** before disclosing PII or system prompts.
 * **Tech:** Gemini 1.5 Flash, Pinecone, n8n Agent Node.
 
-### 2. Recruiter Intelligence (The Hunter)
+### 2. Recruiter Intelligence 
 A proactive lead-generation pipeline.
 * **Logic:** Searches the **Apollo.io** index for UK-based Technical Recruiters and Talent Managers at target companies. 
 * **Action:** Reveals verified emails, cleans the data, and synchronizes leads to a Google Sheets CRM with built-in rate-limiting safety delays.
 
-### 3. Real-Time Data Ingestion (The Learner)
+### 3. Real-Time Data Ingestion
 Ensures the surrogate is never outdated.
 * **Logic:** Watches a specific **Google Drive** folder for new research papers, certifications, or project summaries.
 * **Action:** Automatically downloads, extracts text from PDFs, generates embeddings, and updates the Pinecone vector index.
 
-### 4. Application Personalizer (The Closer)
+### 4. Application Personalizer
 Customized outreach at scale.
 * **Logic:** Triggered by a job application form submission. Matches the specific recruiter for that role via Apollo.
 * **Action:** Uses an LLM chain to rewrite CV bullets for that specific JD and generates a **unique QR code** (via QuickChart) leading to a personalized landing page.
@@ -36,7 +36,7 @@ Customized outreach at scale.
 --------------------------
 
 ## 🛠️ Engineering Stack & Optimization
-* **Orchestration:** n8n (Self-hosted Docker container)
+* **Orchestration:** n8n 
 * **Compute:** Raspberry Pi 5 (8GB) optimized with **ZRAM** and hard Docker resource limits (`--memory="1.5g"`).
 * **Memory:** Pinecone (Vector RAG) + n8n Window Buffer (Conversation memory).
 * **Networking:** Secure **ngrok tunnel** providing an encrypted bridge to home hardware.
